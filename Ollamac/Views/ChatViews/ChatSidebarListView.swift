@@ -46,29 +46,30 @@ struct ChatSidebarListView: View {
     
     var body: some View {
         @Bindable var commandViewModelBindable = commandViewModel
-        VStack {
+        VStack(alignment: .leading) {
             Button(action: {
                 commandViewModel.isAddChatViewPresented = true
             }) {
-                Image(systemName: "plus.bubble.fill")
-                    .font(.system(size: 12))
-                    .foregroundColor(isHoveredNewChat ? Color.purple : .white)
+                Image(systemName: "square.and.pencil")
+                    .font(.system(size: 16))
+                    .foregroundColor(.accentColor)
+                    .padding(.bottom, 8)
+                    .padding(.leading, 8)
+                    .padding(.trailing, 8)
+                    .padding(.top, 4)
+                    .background(
+                        RoundedRectangle(cornerRadius: 8)
+                            .fill(isHoveredNewChat ? Color.white.opacity(0.2) : Color.white.opacity(0.1))
+                    )
+                    .onHover { hovering in
+                        isHoveredNewChat = hovering
+                    }
             }
             .buttonStyle(PlainButtonStyle())
-
-            .overlay(
-                RoundedRectangle(cornerRadius: 6)
-                    .stroke(isHoveredNewChat ? Color.purple : Color.white, lineWidth: 1)
-                    .frame(width: 24, height: 24)
-            )
-            .padding(.top, 15)  // Reduced padding around the button
-            .padding(.trailing, 70)
-            .onHover { hover in
-                isHoveredNewChat = hover
-            }
-
-            Divider()
-                .padding(.top, 10)
+            .padding(.top, 16)
+            .padding(.leading, 16)
+            .padding(.bottom, 0)
+            
             List(selection: $commandViewModelBindable.selectedChat) {
                 Section(header: Text("Today")) {
                     ForEach(todayChats) { chat in
@@ -78,7 +79,7 @@ struct ChatSidebarListView: View {
                                 Text(modelName)
                                     .font(.subheadline)
                                     .foregroundColor(.gray)
-                                    .frame(maxWidth: .infinity, alignment: .trailing)
+                                    .frame(maxWidth: .infinity, alignment: .leading)
                             }
                         }
                         .contextMenu {
@@ -97,7 +98,7 @@ struct ChatSidebarListView: View {
                                 Text(modelName)
                                     .font(.subheadline)
                                     .foregroundColor(.gray)
-                                    .frame(maxWidth: .infinity, alignment: .trailing)
+                                    .frame(maxWidth: .infinity, alignment: .leading)
                             }
                         }
                         .contextMenu {
@@ -116,7 +117,7 @@ struct ChatSidebarListView: View {
                                 Text(modelName)
                                     .font(.subheadline)
                                     .foregroundColor(.gray)
-                                    .frame(maxWidth: .infinity, alignment: .trailing)
+                                    .frame(maxWidth: .infinity, alignment: .leading)
                             }
                         }
                         .contextMenu {

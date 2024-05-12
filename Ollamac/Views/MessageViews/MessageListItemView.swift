@@ -11,6 +11,7 @@ import SwiftUI
 import ViewCondition
 import Highlightr
 
+
 struct MessageListItemView: View {
     private var isAssistant: Bool = false
     private var isGenerating: Bool = false

@@ -71,6 +71,7 @@ struct MessageView: View {
             HStack(alignment: .bottom) {
                 
                 Button(action: {
+                    // Toggle the speech recognition state
                     if isRecognizing {
                         print("Stopping recognition, should keep text.")
                         stopSpeechRecognition()
@@ -81,22 +82,30 @@ struct MessageView: View {
                 }) {
                     ZStack {
                         Circle()
-                            .stroke(innerCircleColor, lineWidth: 2)
+                            .fill(Color.clear)
                             .frame(width: 28, height: 28)
+                            .contentShape(Circle())
                         
-                        if isRecognizing {
-                            RoundedRectangle(cornerRadius: 4)
-                                .fill(recordingColor)
-                                .frame(width: 10, height: 10)
-                        } else {
+                        ZStack {
                             Circle()
-                                .fill(innerCircleColor)
-                                .frame(width: 10, height: 10)
+                                .stroke(innerCircleColor, lineWidth: 2)
+                                .frame(width: 28, height: 28)
+                            
+                            // Indicate recording state
+                            if isRecognizing {
+                                RoundedRectangle(cornerRadius: 4)
+                                    .fill(recordingColor)
+                                    .frame(width: 10, height: 10)
+                            } else {
+                                Circle()
+                                    .fill(innerCircleColor)
+                                    .frame(width: 10, height: 10)
+                            }
                         }
                     }
                 }
                 .buttonStyle(.plain)
-                .contentShape(Circle())
+                .frame(width: 28, height: 28)
                 .help(isRecognizing ? "Stop recording" : "Start recording")
                 .opacity(isGenerating ? 0 : 1)
                 .animation(.default, value: isGenerating)
@@ -109,6 +118,8 @@ struct MessageView: View {
                         }
                     }
                 }
+
+
                 
                 ChatField("Message", text: $prompt, action: sendAction)
                     .textFieldStyle(CapsuleChatFieldStyle())
