@@ -1,0 +1,20 @@
+<?xml version="1.0" standalone="yes"?>
+<rss xmlns:sparkle="http://www.andymatuschak.org/xml-namespaces/sparkle" version="2.0">
+    <channel>
+        <title>Ollamac</title>
+        <item>
+            <title>1.2.0</title>
+            <pubDate>Tue, 07 May 2024 20:41:05 +0700</pubDate>
+            <sparkle:version>7</sparkle:version>
+            <sparkle:shortVersionString>1.2.0</sparkle:shortVersionString>
+            <sparkle:minimumSystemVersion>14.0</sparkle:minimumSystemVersion>
+            <description><![CDATA[
+                <ul>
+                    <li>Bug fixes and performance improvements</li>
+                </ul>
+            ]]>
+            </description>
+            <enclosure url="https://github.com/kevinhermawan/Ollamac/releases/download/v1.2.0/Ollamac-1.2.0.dmg" length="4103181" type="application/octet-stream" sparkle:edSignature="xucPaNKqTjlAj26Lg/Ir6zWV9OdFJj9jFnT3Lc61iWAWfy1St83Zgbb8CN2aoVjyc4g3zyvGcffp/DJRBuAIDw=="/>
+        </item>
+    </channel>
+</rss>

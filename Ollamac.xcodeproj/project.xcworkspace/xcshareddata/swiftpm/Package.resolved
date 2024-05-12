@@ -1,0 +1,96 @@
+{
+  "originHash" : "a62a1a2c31e28640d85ca305ece67a332b6ab550167f1118fe5c0e860465d329",
+  "pins" : [
+    {
+      "identity" : "alamofire",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/Alamofire/Alamofire",
+      "state" : {
+        "revision" : "3dc6a42c7727c49bf26508e29b0a0b35f9c7e1ad",
+        "version" : "5.8.1"
+      }
+    },
+    {
+      "identity" : "chatfield",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/kevinhermawan/ChatField.git",
+      "state" : {
+        "revision" : "36833e4ddc23308c3754083d4bdcfa837fa17799",
+        "version" : "1.0.1"
+      }
+    },
+    {
+      "identity" : "highlightr",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/raspu/Highlightr",
+      "state" : {
+        "revision" : "93199b9e434f04bda956a613af8f571933f9f037",
+        "version" : "2.1.2"
+      }
+    },
+    {
+      "identity" : "networkimage",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/gonzalezreal/NetworkImage",
+      "state" : {
+        "revision" : "7aff8d1b31148d32c5933d75557d42f6323ee3d1",
+        "version" : "6.0.0"
+      }
+    },
+    {
+      "identity" : "ollamakit",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/kevinhermawan/OllamaKit",
+      "state" : {
+        "revision" : "0b0ab9995e85ca7163ca4a4bb1aaa5e6ac2fd619",
+        "version" : "4.1.0"
+      }
+    },
+    {
+      "identity" : "sparkle",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/sparkle-project/Sparkle",
+      "state" : {
+        "revision" : "1f07f4096e52f19b5e7abaa697b7fc592b7ff57c",
+        "version" : "2.5.1"
+      }
+    },
+    {
+      "identity" : "swift-markdown-ui",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/gonzalezreal/swift-markdown-ui",
+      "state" : {
+        "revision" : "5df8a4adedd6ae4eb2455ef60ff75183984daeb8",
+        "version" : "2.2.0"
+      }
+    },
+    {
+      "identity" : "swiftui-introspect",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/siteline/swiftui-introspect",
+      "state" : {
+        "revision" : "9e1cc02a65b22e09a8251261cccbccce02731fc5",
+        "version" : "1.1.1"
+      }
+    },
+    {
+      "identity" : "viewcondition",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/kevinhermawan/ViewCondition",
+      "state" : {
+        "revision" : "3d6ff8a51f31890e091eac6872d966859d11ed76",
+        "version" : "1.0.1"
+      }
+    },
+    {
+      "identity" : "viewstate",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/kevinhermawan/ViewState.git",
+      "state" : {
+        "revision" : "8e5a5efbbf3fb5a2d2621533a115a9da031214cb",
+        "version" : "1.2.1"
+      }
+    }
+  ],
+  "version" : 3
+}
