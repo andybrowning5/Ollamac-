@@ -26,6 +26,9 @@ struct MessageView: View {
     @FocusState private var promptFocused: Bool
     @State private var prompt: String = ""
     
+    @State private var innerCircleColor = Color.white
+    @State private var isHovered = false
+    
     init(for chat: Chat) {
         self.chat = chat
     }
@@ -70,7 +73,7 @@ struct MessageView: View {
                 Button(action: {
                     if isRecognizing {
                         print("Stopping recognition, should keep text.")
-                        stopSpeechRecognition() // Ensure text is kept when stopping recognition
+                        stopSpeechRecognition()
                     } else {
                         print("Starting recognition, requesting microphone access.")
                         requestMicrophoneAccess()
@@ -78,25 +81,34 @@ struct MessageView: View {
                 }) {
                     ZStack {
                         Circle()
-                            .stroke(Color.white, lineWidth: 2)
+                            .stroke(innerCircleColor, lineWidth: 2)
                             .frame(width: 28, height: 28)
+                        
                         if isRecognizing {
                             RoundedRectangle(cornerRadius: 4)
                                 .fill(recordingColor)
                                 .frame(width: 10, height: 10)
                         } else {
                             Circle()
-                                .fill(Color.white)
+                                .fill(innerCircleColor)
                                 .frame(width: 10, height: 10)
                         }
                     }
                 }
                 .buttonStyle(.plain)
-                .contentShape(Circle()) // Correctly set the hitbox to the outer circle
+                .contentShape(Circle())
                 .help(isRecognizing ? "Stop recording" : "Start recording")
-                .hide(if: isGenerating, removeCompletely: true)
-
-                
+                .opacity(isGenerating ? 0 : 1)
+                .animation(.default, value: isGenerating)
+                .onHover { isHovered in
+                    withAnimation {
+                        if isHovered && !isRecognizing {
+                            innerCircleColor = Color(red: 1.0, green: 0.6, blue: 0.6)
+                        } else {
+                            innerCircleColor = Color.white
+                        }
+                    }
+                }
                 
                 ChatField("Message", text: $prompt, action: sendAction)
                     .textFieldStyle(CapsuleChatFieldStyle())
@@ -106,11 +118,15 @@ struct MessageView: View {
                     Image(systemName: "arrow.up.circle.fill")
                         .resizable()
                         .frame(width: 28, height: 28)
+                        .foregroundColor(isHovered ? .accentColor : .primary)
                 }
                 .buttonStyle(.plain)
                 .help("Send message")
-                .hide(if: isGenerating, removeCompletely: true)
-                
+                .opacity(isGenerating ? 0 : 1)
+                .onHover { hovering in
+                    isHovered = hovering
+                }
+            
                 Button(action: messageViewModel.stopGenerate) {
                     Image(systemName: "stop.circle.fill")
                         .resizable()
