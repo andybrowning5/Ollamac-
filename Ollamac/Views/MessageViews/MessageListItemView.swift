@@ -33,7 +33,6 @@ struct MessageListItemView: View {
     
     @State private var isHovered: Bool = false
     @State private var isCopied: Bool = false
-    @State private var isLoading: Bool = true
     
     private var isCopyButtonVisible: Bool {
         isHovered && isAssistant && !isGenerating
@@ -45,69 +44,59 @@ struct MessageListItemView: View {
     
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
-            if isLoading {
-                LoadingView()
-            } else {
-                Text(isAssistant ? "Assistant" : "You")
-                    .font(.title3.weight(.semibold))
-                    .foregroundStyle(.accent)
-                
-                ProgressView()
-                    .controlSize(.small)
-                    .visible(if: isGenerating, removeCompletely: true)
-                
-                if let errorMessage {
-                    TextError(errorMessage)
-                        .visible(if: isError, removeCompletely: true)
-                        .hide(if: isGenerating, removeCompletely: true)
-                }
-                
-                Markdown(text)
-                    .textSelection(.enabled)
-                    .markdownTextStyle(\.text) {
-                        FontSize(NSFont.preferredFont(forTextStyle: .title3).pointSize)
-                    }
-                    .markdownTextStyle(\.code) {
-                        FontFamily(.system(.monospaced))
-                    }
-                    .markdownBlockStyle(\.codeBlock) { configuration in
-                        HighlightedCodeBlock(code: configuration.content, theme: "nord")
-                    }
+            Text(isAssistant ? "Assistant" : "You")
+                .font(.title3.weight(.semibold))
+                .foregroundStyle(.accent)
+            
+            ProgressView()
+                .controlSize(.small)
+                .visible(if: isGenerating, removeCompletely: true)
+            
+            if let errorMessage {
+                TextError(errorMessage)
+                    .visible(if: isError, removeCompletely: true)
                     .hide(if: isGenerating, removeCompletely: true)
-                    .hide(if: isError, removeCompletely: true)
-                
-                HStack(alignment: .center, spacing: 8) {
-                    Button(action: copyAction) {
-                        Image(systemName: isCopied ? "list.clipboard.fill" : "clipboard")
-                    }
-                    .buttonStyle(.accessoryBar)
-                    .clipShape(.circle)
-                    .help("Copy")
-                    .visible(if: isCopyButtonVisible)
-                    
-                    Button(action: regenerateAction) {
-                        Image(systemName: "arrow.triangle.2.circlepath")
-                    }
-                    .buttonStyle(.accessoryBar)
-                    .clipShape(.circle)
-                    .help("Regenerate")
-                    .visible(if: isRegenerateButtonVisible)
-                }
-                .padding(.top, 8)
-                .visible(if: isAssistant, removeCompletely: true)
             }
+            
+            Markdown(text)
+                .textSelection(.enabled)
+                .markdownTextStyle(\.text) {
+                    FontSize(NSFont.preferredFont(forTextStyle: .title3).pointSize)
+                }
+                .markdownTextStyle(\.code) {
+                    FontFamily(.system(.monospaced))
+                }
+                .markdownBlockStyle(\.codeBlock) { configuration in
+                    HighlightedCodeBlock(code: configuration.content, theme: "nord")
+                }
+                .hide(if: isGenerating, removeCompletely: true)
+                .hide(if: isError, removeCompletely: true)
+            
+            HStack(alignment: .center, spacing: 8) {
+                Button(action: copyAction) {
+                    Image(systemName: isCopied ? "list.clipboard.fill" : "clipboard")
+                }
+                .buttonStyle(.accessoryBar)
+                .clipShape(.circle)
+                .help("Copy")
+                .visible(if: isCopyButtonVisible)
+                
+                Button(action: regenerateAction) {
+                    Image(systemName: "arrow.triangle.2.circlepath")
+                }
+                .buttonStyle(.accessoryBar)
+                .clipShape(.circle)
+                .help("Regenerate")
+                .visible(if: isRegenerateButtonVisible)
+            }
+            .padding(.top, 8)
+            .visible(if: isAssistant, removeCompletely: true)
         }
         .padding(.vertical)
         .frame(maxWidth: .infinity, alignment: .leading)
         .onHover {
             isHovered = $0
             isCopied = false
-        }
-        .onAppear {
-            // Simulate a loading delay for demonstration purposes
-            DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
-                isLoading = false
-            }
         }
     }
     
@@ -153,16 +142,5 @@ struct MessageListItemView: View {
         return view
     }
 }
-
-struct LoadingView: View {
-    var body: some View {
-        HStack(spacing: 8) {
-            ProgressView()
-                .controlSize(.small)
-            
-            Text("Loading...")
-                .font(.subheadline)
-                .foregroundColor(.secondary)
-        }
-    }
-}
+ 
+ 

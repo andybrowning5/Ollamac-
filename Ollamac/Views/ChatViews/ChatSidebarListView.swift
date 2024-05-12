@@ -62,41 +62,67 @@ struct ChatSidebarListView: View {
                     .frame(width: 24, height: 24)
             )
             .padding(.top, 15)  // Reduced padding around the button
-            .padding(.trailing, 65)
+            .padding(.trailing, 70)
             .onHover { hover in
                 isHoveredNewChat = hover
             }
 
+            Divider()
+                .padding(.top, 10)
             List(selection: $commandViewModelBindable.selectedChat) {
                 Section(header: Text("Today")) {
                     ForEach(todayChats) { chat in
-                        Label(chat.name, systemImage: "bubble.right")
-                            .contextMenu {
-                                ChatContextMenu(commandViewModel, for: chat)
+                        VStack(alignment: .leading, spacing: 2) {
+                            Label(chat.name, systemImage: "bubble.right")
+                            if let modelName = chat.model?.name {
+                                Text(modelName)
+                                    .font(.subheadline)
+                                    .foregroundColor(.gray)
+                                    .frame(maxWidth: .infinity, alignment: .trailing)
                             }
-                            .tag(chat)
+                        }
+                        .contextMenu {
+                            ChatContextMenu(commandViewModel, for: chat)
+                        }
+                        .tag(chat)
                     }
                 }
                 .hide(if: todayChats.isEmpty, removeCompletely: true)
 
                 Section(header: Text("Yesterday")) {
                     ForEach(yesterdayChats) { chat in
-                        Label(chat.name, systemImage: "bubble.right")
-                            .contextMenu {
-                                ChatContextMenu(commandViewModel, for: chat)
+                        VStack(alignment: .leading, spacing: 2) {
+                            Label(chat.name, systemImage: "bubble.right")
+                            if let modelName = chat.model?.name {
+                                Text(modelName)
+                                    .font(.subheadline)
+                                    .foregroundColor(.gray)
+                                    .frame(maxWidth: .infinity, alignment: .trailing)
                             }
-                            .tag(chat)
+                        }
+                        .contextMenu {
+                            ChatContextMenu(commandViewModel, for: chat)
+                        }
+                        .tag(chat)
                     }
                 }
                 .hide(if: yesterdayChats.isEmpty, removeCompletely: true)
 
                 Section(header: Text("Previous Days")) {
                     ForEach(previousDays) { chat in
-                        Label(chat.name, systemImage: "bubble.right")
-                            .contextMenu {
-                                ChatContextMenu(commandViewModel, for: chat)
+                        VStack(alignment: .leading, spacing: 2) {
+                            Label(chat.name, systemImage: "bubble.right")
+                            if let modelName = chat.model?.name {
+                                Text(modelName)
+                                    .font(.subheadline)
+                                    .foregroundColor(.gray)
+                                    .frame(maxWidth: .infinity, alignment: .trailing)
                             }
-                            .tag(chat)
+                        }
+                        .contextMenu {
+                            ChatContextMenu(commandViewModel, for: chat)
+                        }
+                        .tag(chat)
                     }
                 }
                 .hide(if: previousDays.isEmpty, removeCompletely: true)
@@ -105,6 +131,7 @@ struct ChatSidebarListView: View {
             .task {
                 try? chatViewModel.fetch()
             }
+
         }
         .toolbar {
             ToolbarItemGroup {

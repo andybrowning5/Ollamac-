@@ -70,7 +70,7 @@ struct MessageView: View {
                 Button(action: {
                     if isRecognizing {
                         print("Stopping recognition, should keep text.")
-                        stopSpeechRecognition(keepText: true) // Ensure text is kept when stopping recognition
+                        stopSpeechRecognition() // Ensure text is kept when stopping recognition
                     } else {
                         print("Starting recognition, requesting microphone access.")
                         requestMicrophoneAccess()
@@ -80,12 +80,19 @@ struct MessageView: View {
                         Circle()
                             .stroke(Color.white, lineWidth: 2)
                             .frame(width: 28, height: 28)
-                        Circle()
-                            .fill(isRecognizing ? recordingColor : Color.white)
-                            .frame(width: 10, height: 10)
+                        if isRecognizing {
+                            RoundedRectangle(cornerRadius: 4)
+                                .fill(recordingColor)
+                                .frame(width: 10, height: 10)
+                        } else {
+                            Circle()
+                                .fill(Color.white)
+                                .frame(width: 10, height: 10)
+                        }
                     }
                 }
                 .buttonStyle(.plain)
+                .contentShape(Circle()) // Correctly set the hitbox to the outer circle
                 .help(isRecognizing ? "Stop recording" : "Start recording")
                 .hide(if: isGenerating, removeCompletely: true)
 
@@ -191,73 +198,75 @@ struct MessageView: View {
     
     private func startSpeechRecognition() {
         speechRecognizer = SFSpeechRecognizer(locale: Locale(identifier: "en-US"))
-        
-        guard let recognizer = speechRecognizer else {
-            // Handle case where speech recognition is not supported for the current locale
-            print("Speech recognition is not supported for the current locale")
+
+        guard let recognizer = speechRecognizer, !isRecognizing else {
+            print("Speech recognition already started or not supported")
             return
         }
-        
+
         SFSpeechRecognizer.requestAuthorization { authStatus in
             DispatchQueue.main.async {
-                if authStatus == .authorized {
+                switch authStatus {
+                case .authorized:
                     self.isRecognizing = true
-                    
-                    self.audioEngine = AVAudioEngine()
-                    let inputNode = self.audioEngine!.inputNode
-                    let recordingFormat = inputNode.outputFormat(forBus: 0)
-                    
-                    self.speechRecognitionRequest = SFSpeechAudioBufferRecognitionRequest()
-                    
-                    // Configure the audio buffer size
-                    let bufferSize: AVAudioFrameCount = 1024
-                    inputNode.installTap(onBus: 0, bufferSize: bufferSize, format: recordingFormat) { (buffer: AVAudioPCMBuffer, when: AVAudioTime) in
-                        self.speechRecognitionRequest?.append(buffer)
-                    }
-                    
-                    self.audioEngine!.prepare()
-                    do {
-                        try self.audioEngine!.start()
-                    } catch {
-                        print("Audio engine failed to start: \(error.localizedDescription)")
-                        self.stopSpeechRecognition()
-                        return
-                    }
-                    
-                    self.speechRecognitionTask = recognizer.recognitionTask(with: self.speechRecognitionRequest!) { result, error in
-                        if let result = result {
-                            let recognizedText = result.bestTranscription.formattedString
-                            self.prompt = recognizedText
-                            print("Recognized Text: \(recognizedText)")
-                        }
-                        
-                        if let error = error {
-                            print("Speech Recognition Error: \(error.localizedDescription)")
-                            self.stopSpeechRecognition()
-                        }
-                    }
-                } else {
-                    // Handle case where speech recognition authorization is denied
-                    print("Speech recognition authorization denied")
+                    self.setupAudioEngineAndRecognition(recognizer)
+                default:
+                    print("Speech recognition authorization denied or restricted")
                     self.isRecognizing = false
-                    // You can show an alert or message to the user indicating that authorization is required
                 }
             }
         }
     }
-    
-    private func stopSpeechRecognition(keepText: Bool = true) {
-        isRecognizing = false // Set isRecognizing to false when recognition stops
-        speechRecognitionRequest?.endAudio()
-        speechRecognitionRequest = nil
-        speechRecognitionTask?.cancel()
-        speechRecognitionTask = nil
-        audioEngine?.stop()
-        audioEngine?.inputNode.removeTap(onBus: 0)
-        audioEngine = nil
-        
-        if !keepText {
-            prompt = "" // Clear the prompt text if keepText is false
+
+    private func setupAudioEngineAndRecognition(_ recognizer: SFSpeechRecognizer) {
+        self.audioEngine = AVAudioEngine()
+        guard let inputNode = self.audioEngine?.inputNode else { return }
+
+        let recordingFormat = inputNode.outputFormat(forBus: 0)
+        self.speechRecognitionRequest = SFSpeechAudioBufferRecognitionRequest()
+        inputNode.installTap(onBus: 0, bufferSize: 1024, format: recordingFormat) { (buffer, when) in
+            self.speechRecognitionRequest?.append(buffer)
+        }
+
+        do {
+            try self.audioEngine?.start()
+        } catch {
+            print("Audio engine failed to start: \(error)")
+            self.stopSpeechRecognition()
+            return
+        }
+
+        self.speechRecognitionTask = recognizer.recognitionTask(with: self.speechRecognitionRequest!) { result, error in
+            if let result = result {
+                let recognizedText = result.bestTranscription.formattedString
+                DispatchQueue.main.async {
+                    self.prompt = recognizedText
+                    print("Recognized Text Updated: \(recognizedText)")
+                }
+                
+                if result.isFinal {
+                    self.stopSpeechRecognition()
+                }
+            }
+            if error != nil {
+                self.stopSpeechRecognition()
+            }
         }
     }
+
+    private func stopSpeechRecognition() {
+        isRecognizing = false
+        audioEngine?.stop()
+        audioEngine?.inputNode.removeTap(onBus: 0)
+        speechRecognitionTask?.finish()
+        
+        // Delay the cleanup of speechRecognitionRequest to allow the final result to be processed
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+            self.speechRecognitionRequest = nil
+        }
+        
+        audioEngine = nil
+        speechRecognitionTask = nil
+    }
+
 }
