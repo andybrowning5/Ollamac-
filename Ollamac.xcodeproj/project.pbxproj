@@ -36,6 +36,7 @@
 		0AE024832AFB898300347C18 /* Sparkle in Frameworks */ = {isa = PBXBuildFile; productRef = 0AE024822AFB898300347C18 /* Sparkle */; };
 		0AE024862AFB8EB900347C18 /* UpdaterViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0AE024852AFB8EB900347C18 /* UpdaterViewModel.swift */; };
 		0AE0248B2AFEA24600347C18 /* OllamaKit in Frameworks */ = {isa = PBXBuildFile; productRef = 0AE0248A2AFEA24600347C18 /* OllamaKit */; };
+		9B54ED5E2BF195170039B9CE /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B54ED5D2BF195170039B9CE /* SettingsView.swift */; };
 		9BC8894C2BEE8D5600BA02EC /* StatusBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BC8894B2BEE8D5600BA02EC /* StatusBarController.swift */; };
 		9BC8894F2BEEA20400BA02EC /* Highlightr in Frameworks */ = {isa = PBXBuildFile; productRef = 9BC8894E2BEEA20400BA02EC /* Highlightr */; };
 		9BC889562BEECA6800BA02EC /* UITextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9BC889552BEECA6800BA02EC /* UITextView.swift */; };
@@ -68,6 +69,7 @@
 		0ACA4D832AF94A9C000DA76F /* ChatContextMenu.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatContextMenu.swift; sourceTree = "<group>"; };
 		0AE024842AFB8D0E00347C18 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		0AE024852AFB8EB900347C18 /* UpdaterViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UpdaterViewModel.swift; sourceTree = "<group>"; };
+		9B54ED5D2BF195170039B9CE /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		9BC8894B2BEE8D5600BA02EC /* StatusBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatusBarController.swift; sourceTree = "<group>"; };
 		9BC889552BEECA6800BA02EC /* UITextView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UITextView.swift; sourceTree = "<group>"; };
 		9BC889592BEF08BF00BA02EC /* SpeechRecognizerService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpeechRecognizerService.swift; sourceTree = "<group>"; };
@@ -215,6 +217,7 @@
 				0A4D35C12AF56FD500846890 /* AddChatView.swift */,
 				0ACA4D832AF94A9C000DA76F /* ChatContextMenu.swift */,
 				0ACA4D492AF7946A000DA76F /* ChatSidebarListView.swift */,
+				9B54ED5D2BF195170039B9CE /* SettingsView.swift */,
 				0ACA4D4D2AF799A1000DA76F /* RenameChatView.swift */,
 			);
 			path = ChatViews;
@@ -337,6 +340,7 @@
 				9BC8895A2BEF08BF00BA02EC /* SpeechRecognizerService.swift in Sources */,
 				0A4D35C42AF575E700846890 /* MessageView.swift in Sources */,
 				0ACA4D4A2AF7946A000DA76F /* ChatSidebarListView.swift in Sources */,
+				9B54ED5E2BF195170039B9CE /* SettingsView.swift in Sources */,
 				0A4D35992AF5425900846890 /* AppView.swift in Sources */,
 				0ACA4D4E2AF799A1000DA76F /* RenameChatView.swift in Sources */,
 				0ACA4D512AF7A34D000DA76F /* ModelContext+SaveChanges.swift in Sources */,

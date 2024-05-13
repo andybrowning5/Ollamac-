@@ -13,7 +13,9 @@ struct ChatSidebarListView: View {
     @Environment(ChatViewModel.self) private var chatViewModel
     
     @State private var isHoveredNewChat = false
+    @State private var isHoveredSettings = false
     @State private var isHoveredMic = false
+    @State private var isSettingsPopoverPresented = false
     
     private var todayChats: [Chat] {
         let calendar = Calendar.current
@@ -47,28 +49,60 @@ struct ChatSidebarListView: View {
     var body: some View {
         @Bindable var commandViewModelBindable = commandViewModel
         VStack(alignment: .leading) {
-            Button(action: {
-                commandViewModel.isAddChatViewPresented = true
-            }) {
-                Image(systemName: "square.and.pencil")
-                    .font(.system(size: 16))
-                    .foregroundColor(.accentColor)
-                    .padding(.bottom, 8)
-                    .padding(.leading, 8)
-                    .padding(.trailing, 8)
-                    .padding(.top, 4)
-                    .background(
-                        RoundedRectangle(cornerRadius: 8)
-                            .fill(isHoveredNewChat ? Color.white.opacity(0.2) : Color.white.opacity(0.1))
-                    )
-                    .onHover { hovering in
-                        isHoveredNewChat = hovering
-                    }
+            HStack(){
+                Button(action: {
+                    self.isSettingsPopoverPresented = true
+                }) {
+                    Image(systemName: "gear")
+                        .font(.system(size: 16))
+                        .foregroundColor(.primary)
+                        .padding(.bottom, 6)
+                        .padding(.leading, 8)
+                        .padding(.trailing, 8)
+                        .padding(.top, 6)
+                        .background(
+                            RoundedRectangle(cornerRadius: 8)
+                                .fill(isHoveredSettings ? Color.white.opacity(0.2) : Color.white.opacity(0.1))
+                        )
+                        .onHover { hovering in
+                            isHoveredSettings = hovering
+                        }
+                }
+                .buttonStyle(PlainButtonStyle())
+                .padding(.top, 16)
+                .padding(.leading, 16)
+                .padding(.trailing, 4)
+                .padding(.bottom, 0)
+                .popover(isPresented: $isSettingsPopoverPresented) {
+                    SettingsView()
+                }
+   
+                
+                Button(action: {
+                    commandViewModel.isAddChatViewPresented = true
+                }) {
+                    Image(systemName: "square.and.pencil")
+                        .font(.system(size: 16))
+                        .foregroundColor(.primary)
+                        .padding(.bottom, 8)
+                        .padding(.leading, 8)
+                        .padding(.trailing, 8)
+                        .padding(.top, 4)
+                        .background(
+                            RoundedRectangle(cornerRadius: 8)
+                                .fill(isHoveredNewChat ? Color.white.opacity(0.2) : Color.white.opacity(0.1))
+                        )
+                        .onHover { hovering in
+                            isHoveredNewChat = hovering
+                        }
+                }
+                .buttonStyle(PlainButtonStyle())
+                .padding(.top, 16)
+                .padding(.trailing, 16)
+                .padding(.leading, 4)
+                .padding(.bottom, 0)
             }
-            .buttonStyle(PlainButtonStyle())
-            .padding(.top, 16)
-            .padding(.leading, 16)
-            .padding(.bottom, 0)
+
             
             List(selection: $commandViewModelBindable.selectedChat) {
                 Section(header: Text("Today")) {
@@ -184,3 +218,8 @@ struct ChatSidebarListView: View {
         commandViewModel.selectedChat = nil
     }
 }
+
+
+
+
+

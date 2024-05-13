@@ -61,6 +61,7 @@ struct SidebarToggleButton: View {
                 .background(
                     RoundedRectangle(cornerRadius: 8)
                         .fill(isHovering ? Color.white.opacity(0.2) : Color.white.opacity(0.1))
+                        .blur(radius: 0.5)
                 )
         }
         .buttonStyle(PlainButtonStyle())
