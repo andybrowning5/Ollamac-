@@ -36,7 +36,7 @@ final class OllamaViewModel {
         for model in prevModels {
             if newModels.contains(where: { $0.name == model.name }) {
                 model.isAvailable = true
-            } else if(!model.isAPI){
+            } else if !model.isAPI {
                 model.isAvailable = false
             }
         }
@@ -44,11 +44,12 @@ final class OllamaViewModel {
         for newModel in newModels {
             let model = OllamaModel(name: newModel.name, isAPI: false, apiKey: "", apiURL: "")
             model.isAvailable = true
-            
             self.modelContext.insert(model)
         }
         
         try self.modelContext.saveChanges()
+        
+        // Fetch the models from the local storage, including the ChatGPT model
         models = try self.fetchFromLocal()
     }
     
@@ -69,9 +70,15 @@ final class OllamaViewModel {
     
     private func addChatGPTModel() {
         // Create the ChatGPT model
-        let chatGPTModel = OllamaModel(name: "chatGPT 4o", isAPI: true, apiKey: AppSettings.shared.apiKey, apiURL: "https://api.openai.com/v1/chat/completions")
+        let chatGPTModel = OllamaModel(name: "gpt-4o", isAPI: true, apiKey: AppSettings.shared.apiKey, apiURL: "https://api.openai.com/v1/chat/completions")
         chatGPTModel.isAvailable = true
         
-        models.append(chatGPTModel)
+        // Save the ChatGPT model to the local storage
+        modelContext.insert(chatGPTModel)
+        do {
+            try modelContext.saveChanges()
+        } catch {
+            print("Error saving ChatGPT model: \(error)")
+        }
     }
 }
