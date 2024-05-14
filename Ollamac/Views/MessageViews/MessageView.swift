@@ -6,6 +6,7 @@ import ViewState
 
 import Speech
 
+
 struct MessageView: View {
     private var chat: Chat
     private let recordingColor = Color.red
@@ -28,6 +29,7 @@ struct MessageView: View {
     
     @State private var innerCircleColor = Color.white
     @State private var isHovered = false
+    
     
     init(for chat: Chat) {
         self.chat = chat
@@ -118,13 +120,27 @@ struct MessageView: View {
                         }
                     }
                 }
+                
+                
+                if prompt.count <= 300 {
+                    ChatField("Message", text: $prompt, action: sendAction)
+                        .textFieldStyle(CapsuleChatFieldStyle())
+                        .focused($promptFocused)
+                } else {
+                    ZStack(alignment: .leading) {
+                        TextEditor(text: $prompt)
+                            .padding(4)
+                            .frame(minHeight: 50, maxHeight: 200, alignment: .center)
+                            .foregroundColor(.white)
+                            .cornerRadius(20)
+                            .focused($promptFocused)
+                            .fixedSize(horizontal: false, vertical: true)
+                            .scrollContentBackground(.visible)
+                            .font(.system(size: 13))
+                    }
+                }
 
 
-                
-                ChatField("Message", text: $prompt, action: sendAction)
-                    .textFieldStyle(CapsuleChatFieldStyle())
-                    .focused($promptFocused)
-                
                 Button(action: sendAction) {
                     Image(systemName: "arrow.up.circle.fill")
                         .resizable()
@@ -137,7 +153,7 @@ struct MessageView: View {
                 .onHover { hovering in
                     isHovered = hovering
                 }
-            
+                
                 Button(action: messageViewModel.stopGenerate) {
                     Image(systemName: "stop.circle.fill")
                         .resizable()
@@ -225,12 +241,12 @@ struct MessageView: View {
     
     private func startSpeechRecognition() {
         speechRecognizer = SFSpeechRecognizer(locale: Locale(identifier: "en-US"))
-
+        
         guard let recognizer = speechRecognizer, !isRecognizing else {
             print("Speech recognition already started or not supported")
             return
         }
-
+        
         SFSpeechRecognizer.requestAuthorization { authStatus in
             DispatchQueue.main.async {
                 switch authStatus {
@@ -244,17 +260,17 @@ struct MessageView: View {
             }
         }
     }
-
+    
     private func setupAudioEngineAndRecognition(_ recognizer: SFSpeechRecognizer) {
         self.audioEngine = AVAudioEngine()
         guard let inputNode = self.audioEngine?.inputNode else { return }
-
+        
         let recordingFormat = inputNode.outputFormat(forBus: 0)
         self.speechRecognitionRequest = SFSpeechAudioBufferRecognitionRequest()
         inputNode.installTap(onBus: 0, bufferSize: 1024, format: recordingFormat) { (buffer, when) in
             self.speechRecognitionRequest?.append(buffer)
         }
-
+        
         do {
             try self.audioEngine?.start()
         } catch {
@@ -262,7 +278,7 @@ struct MessageView: View {
             self.stopSpeechRecognition()
             return
         }
-
+        
         self.speechRecognitionTask = recognizer.recognitionTask(with: self.speechRecognitionRequest!) { result, error in
             if let result = result {
                 let recognizedText = result.bestTranscription.formattedString
@@ -280,7 +296,7 @@ struct MessageView: View {
             }
         }
     }
-
+    
     private func stopSpeechRecognition() {
         isRecognizing = false
         audioEngine?.stop()
@@ -295,5 +311,24 @@ struct MessageView: View {
         audioEngine = nil
         speechRecognitionTask = nil
     }
-
+    
 }
+
+//class Debouncer {
+//    private let delay: TimeInterval
+//    private var workItem: DispatchWorkItem?
+//    
+//    init(delay: TimeInterval) {
+//        self.delay = delay
+//    }
+//    
+//    func run(action: @escaping () -> Void) {
+//        workItem?.cancel()
+//        workItem = DispatchWorkItem(block: action)
+//        DispatchQueue.main.asyncAfter(deadline: .now() + delay, execute: workItem!)
+//    }
+//}
+
+
+
+

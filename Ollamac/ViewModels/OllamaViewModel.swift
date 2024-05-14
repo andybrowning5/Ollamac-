@@ -4,7 +4,6 @@
 //
 //  Created by Kevin Hermawan on 04/11/23.
 //
-
 import SwiftData
 import SwiftUI
 import ViewState
@@ -20,6 +19,9 @@ final class OllamaViewModel {
     init(modelContext: ModelContext, ollamaKit: OllamaKit) {
         self.modelContext = modelContext
         self.ollamaKit = ollamaKit
+        
+        // Add the hardcoded ChatGPT model during initialization
+        self.addChatGPTModel()
     }
     
     func isReachable() async -> Bool {
@@ -34,13 +36,13 @@ final class OllamaViewModel {
         for model in prevModels {
             if newModels.contains(where: { $0.name == model.name }) {
                 model.isAvailable = true
-            } else {
+            } else if(!model.isAPI){
                 model.isAvailable = false
             }
         }
         
         for newModel in newModels {
-            let model = OllamaModel(name: newModel.name)
+            let model = OllamaModel(name: newModel.name, isAPI: false, apiKey: "", apiURL: "")
             model.isAvailable = true
             
             self.modelContext.insert(model)
@@ -63,5 +65,13 @@ final class OllamaViewModel {
         let models = try modelContext.fetch(fetchDescriptor)
         
         return models
+    }
+    
+    private func addChatGPTModel() {
+        // Create the ChatGPT model
+        let chatGPTModel = OllamaModel(name: "chatGPT 4o", isAPI: true, apiKey: AppSettings.shared.apiKey, apiURL: "https://api.openai.com/v1/chat/completions")
+        chatGPTModel.isAvailable = true
+        
+        models.append(chatGPTModel)
     }
 }

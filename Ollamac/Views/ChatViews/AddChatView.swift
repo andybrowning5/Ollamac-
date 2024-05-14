@@ -30,8 +30,12 @@ struct AddChatView: View {
     private var createButtonDisabled: Bool {
         if name.isEmpty { return true }
         if selectedModel.isNil { return true }
-        if let selectedModel, selectedModel.isNotAvailable { return true }
         
+        if let selectedModel = selectedModel {
+            if (!selectedModel.isAPI) && selectedModel.isNotAvailable {
+                return true
+            }
+        }
         return false
     }
     
@@ -63,7 +67,7 @@ struct AddChatView: View {
                     .padding(.top, 8)
                     .disabled(isLoading)
                 } footer: {
-                    if let selectedModel, selectedModel.isNotAvailable {
+                    if let selectedModel, (!selectedModel.isAPI) && selectedModel.isNotAvailable {
                         TextError(AppMessages.ollamaModelUnavailable)
                             .padding(.top, 8)
                     }
