@@ -151,7 +151,7 @@ struct MessageListItemView: View {
         request.httpMethod = "POST"
         
         // Use the API key from AppSettings
-        let apiKey = AppSettings.shared.apiKey
+        let apiKey = AppSettings.shared.openAIAPIKey
         request.addValue("Bearer \(apiKey)", forHTTPHeaderField: "Authorization")
         
         request.addValue("application/json", forHTTPHeaderField: "Content-Type")

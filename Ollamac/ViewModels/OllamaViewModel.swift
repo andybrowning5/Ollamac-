@@ -22,6 +22,7 @@ final class OllamaViewModel {
         
         // Add the hardcoded ChatGPT model during initialization
         self.addChatGPTModel()
+        self.addClaudeModel()
     }
     
     func isReachable() async -> Bool {
@@ -42,7 +43,7 @@ final class OllamaViewModel {
         }
         
         for newModel in newModels {
-            let model = OllamaModel(name: newModel.name, isAPI: false, apiKey: "", apiURL: "")
+            let model = OllamaModel(name: newModel.name, isAPI: false, apiKey: "", apiURL: "", modelVersion: "")
             model.isAvailable = true
             self.modelContext.insert(model)
         }
@@ -70,7 +71,7 @@ final class OllamaViewModel {
     
     private func addChatGPTModel() {
         // Create the ChatGPT model
-        let chatGPTModel = OllamaModel(name: "gpt-4o", isAPI: true, apiKey: AppSettings.shared.apiKey, apiURL: "https://api.openai.com/v1/chat/completions")
+        let chatGPTModel = OllamaModel(name: "gpt-4o", isAPI: true, apiKey: AppSettings.shared.openAIAPIKey, apiURL: "https://api.openai.com/v1/chat/completions", modelVersion: "gpt-4o")
         chatGPTModel.isAvailable = true
         
         // Save the ChatGPT model to the local storage
@@ -81,4 +82,19 @@ final class OllamaViewModel {
             print("Error saving ChatGPT model: \(error)")
         }
     }
+    
+    private func addClaudeModel() {
+        // Create the ChatGPT model
+        let claudeModel = OllamaModel(name: "claude3-Opus", isAPI: true, apiKey: AppSettings.shared.claudeAPIKey, apiURL: "https://api.anthropic.com/v1/messages", modelVersion: "claude-3-opus-20240229")
+        claudeModel.isAvailable = true
+        
+        // Save the ChatGPT model to the local storage
+        modelContext.insert(claudeModel)
+        do {
+            try modelContext.saveChanges()
+        } catch {
+            print("Error saving Claude model: \(error)")
+        }
+    }
+    
 }

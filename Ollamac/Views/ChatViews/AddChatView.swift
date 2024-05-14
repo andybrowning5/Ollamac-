@@ -53,15 +53,32 @@ struct AddChatView: View {
                 Section {
                     TextField("Name", text: $name)
                         .disabled(isLoading)
-                    
+
                     Picker("Model", selection: $selectedModel) {
                         Text("Select a model")
                             .tag(nil as OllamaModel?)
-                        
-                        ForEach(ollamaViewModel.models) { model in
-                            Text(model.name)
-                                .lineLimit(1)
-                                .tag(model as OllamaModel?)
+
+                        let apiModels = ollamaViewModel.models.filter { $0.isAPI }
+                        let localModels = ollamaViewModel.models.filter { !$0.isAPI }
+
+                        Section(header: Text("API (Enter API key in settings to use)")) {
+                            ForEach(apiModels) { model in
+                                Text(model.name)
+                                    .lineLimit(1)
+                                    .tag(model as OllamaModel?)
+                            }
+                        }
+
+                        if !apiModels.isEmpty && !localModels.isEmpty {
+                            Divider()
+                        }
+
+                        Section(header: Text("Local")) {
+                            ForEach(localModels) { model in
+                                Text(model.name)
+                                    .lineLimit(1)
+                                    .tag(model as OllamaModel?)
+                            }
                         }
                     }
                     .padding(.top, 8)

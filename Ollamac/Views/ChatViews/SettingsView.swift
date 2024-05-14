@@ -1,4 +1,3 @@
-//
 //  SettingsView.swift
 //  Ollamac
 //
@@ -10,22 +9,34 @@ import SwiftUI
 
 class AppSettings {
     static let shared = AppSettings()
+    
     private init() {}
     
-    private let apiKeyKey = "OpenAI_APIKey"
+    private let openAIAPIKeyKey = "openAIAPIKey"
+    private let claudeAPIKeyKey = "claudeAPIKey"
     
-    var apiKey: String {
+    var openAIAPIKey: String {
         get {
-            UserDefaults.standard.string(forKey: apiKeyKey) ?? ""
+            UserDefaults.standard.string(forKey: openAIAPIKeyKey) ?? ""
         }
         set {
-            UserDefaults.standard.set(newValue, forKey: apiKeyKey)
+            UserDefaults.standard.set(newValue, forKey: openAIAPIKeyKey)
+        }
+    }
+    
+    var claudeAPIKey: String {
+        get {
+            UserDefaults.standard.string(forKey: claudeAPIKeyKey) ?? ""
+        }
+        set {
+            UserDefaults.standard.set(newValue, forKey: claudeAPIKeyKey)
         }
     }
 }
 
 struct SettingsView: View {
-    @State private var apiKey = AppSettings.shared.apiKey
+    @State private var openAIAPIKey = AppSettings.shared.openAIAPIKey
+    @State private var claudeAPIKey = AppSettings.shared.claudeAPIKey
     
     var body: some View {
         VStack {
@@ -38,14 +49,28 @@ struct SettingsView: View {
                     .font(.headline)
                     .padding(.bottom, 8)
                 
-                SecureField("Enter OpenAI API Key", text: $apiKey)
+                SecureField("Enter OpenAI API Key", text: $openAIAPIKey)
                     .textFieldStyle(RoundedBorderTextFieldStyle())
                     .padding(.horizontal, 20)
                 
-                Button("Save") {
-                    AppSettings.shared.apiKey = apiKey
+                Button("Save OpenAI API Key") {
+                    AppSettings.shared.openAIAPIKey = openAIAPIKey
                 }
-                .padding(.top, 20)
+                .padding(.top, 10)
+                
+                Text("Claude API Key")
+                    .font(.headline)
+                    .padding(.top, 20)
+                    .padding(.bottom, 8)
+                
+                SecureField("Enter Claude API Key", text: $claudeAPIKey)
+                    .textFieldStyle(RoundedBorderTextFieldStyle())
+                    .padding(.horizontal, 20)
+                
+                Button("Save Claude API Key") {
+                    AppSettings.shared.claudeAPIKey = claudeAPIKey
+                }
+                .padding(.top, 10)
             }
             .padding(.vertical, 20)
             .cornerRadius(10)
@@ -53,13 +78,13 @@ struct SettingsView: View {
             
             Spacer()
             
-            Text("Make sure to enter a valid OpenAI API key to use the app's text to speech feature.")
+            Text("Make sure to enter valid API keys to use the app's features.")
                 .font(.footnote)
                 .foregroundColor(.gray)
                 .multilineTextAlignment(.center)
                 .padding()
         }
-        .frame(width: 500, height: 300)
+        .frame(width: 500, height: 400)
     }
 }
 
